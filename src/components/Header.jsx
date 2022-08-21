@@ -1,10 +1,20 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
+import { app } from "../firebase.config";
 import Avatar from '../images/avatar.png';
 
 function Header() {
+  const firebaseAuth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  async function login() {
+    const response = await signInWithPopup(firebaseAuth, provider);
+    console.log(response);
+  }
+
   return (
     <header className='box-border w-screen bg-slate-300 fixed z-50 p-6 px-14'>
         <div className='hidden md:flex h-full w-full justify-between items-center'>
@@ -23,7 +33,9 @@ function Header() {
             <div className='h-4 w-4 absolute top-0 left-4 rounded bg-black flex justify-center items-center'>
               <p className='text-xs text-white font-semibold'>2</p>
             </div>
-            <img src={Avatar} className='h-9 w-9 drop-shadow' alt="user-avatar" />
+            <div>
+              <img src={Avatar} onClick={() => login()} className='h-9 w-9 drop-shadow' alt="user-avatar" />
+            </div>
           </div>
         </div>
 
