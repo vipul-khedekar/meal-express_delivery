@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from "react-router-dom";
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
 import Avatar from '../images/avatar.png';
@@ -7,7 +8,9 @@ function Header() {
   return (
     <header className='box-border w-screen bg-slate-300 fixed z-50 p-6 px-14'>
         <div className='hidden md:flex h-full w-full justify-between items-center'>
-          <p className='text-2xl font-bold'>Meal <span className='italic'>Express...</span></p>
+          <Link to={"/"}>
+            <p className='text-2xl font-bold'>Meal <span className='italic'>Express...</span></p>
+          </Link>
           
           <ul className='flex gap-8'>
             <li className='cursor-pointer'>Home</li>
