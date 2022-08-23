@@ -4,15 +4,21 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { MdOutlineShoppingCart } from 'react-icons/md';
 
 import { app } from "../firebase.config";
+import { useStateValue } from "../context/StateProvider";
+import { actionType } from "../context/reducer";
 import Avatar from '../images/avatar.png';
 
 function Header() {
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
+  const [{user}, dispatch] = useStateValue();
+  console.log(user);
+
   async function login() {
     const response = await signInWithPopup(firebaseAuth, provider);
-    console.log(response);
+    const { providerData } = response.user;
+    dispatch({type: actionType.SET_USER, user: providerData[0]});
   }
 
   return (
@@ -34,7 +40,7 @@ function Header() {
               <p className='text-xs text-white font-semibold'>2</p>
             </div>
             <div>
-              <img src={Avatar} onClick={() => login()} className='h-9 w-9 drop-shadow' alt="user-avatar" />
+              <img className='h-9 w-9 drop-shadow' onClick={() => login()} src={user ? user.photoURL : Avatar} alt={user ? user.displayName : "user-avatar"} />
             </div>
           </div>
         </div>
