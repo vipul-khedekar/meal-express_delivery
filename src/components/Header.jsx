@@ -30,7 +30,7 @@ function Header() {
 
           <div className='flex justify-center items-center gap-7 relative'>
             <MdOutlineShoppingCart className='text-xl cursor-pointer' />
-            <div className='h-4 w-4 absolute top-0 left-4 rounded bg-black flex justify-center items-center'>
+            <div className='h-4 w-4 absolute top-0 left-4 rounded-full bg-black flex justify-center items-center'>
               <p className='text-xs text-white font-semibold'>2</p>
             </div>
             <div>
