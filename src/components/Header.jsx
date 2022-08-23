@@ -19,6 +19,7 @@ function Header() {
     const response = await signInWithPopup(firebaseAuth, provider);
     const { providerData } = response.user;
     dispatch({type: actionType.SET_USER, user: providerData[0]});
+    localStorage.setItem(`user`, JSON.stringify(providerData[0]));
   }
 
   return (
