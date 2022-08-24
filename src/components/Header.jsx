@@ -22,10 +22,15 @@ function Header() {
       const { providerData } = response.user;
       dispatch({type: actionType.SET_USER, user: providerData[0]});
       localStorage.setItem(`user`, JSON.stringify(providerData[0]));
-    }
-    if(user) {
+    } else {
       setIsMenu(!isMenu);
     }
+  }
+
+  function logout() {
+    dispatch({type: actionType.SET_USER, user: null});
+    localStorage.removeItem(`user`);
+    setIsMenu(false);
   }
 
   return (
@@ -55,7 +60,7 @@ function Header() {
                   <p className='p-1 rounded-lg hover:bg-red-600'>Add new item</p>
                 </Link>
 
-                <p className='p-1 rounded-lg hover:bg-red-600'>Logout</p>
+                <p className='p-1 rounded-lg hover:bg-red-600' onClick={() => logout()}>Logout</p>
               </menu>
             )}
           </div>
@@ -83,7 +88,7 @@ function Header() {
                 <p className='p-1 rounded-lg cursor-pointer'>Home</p>
                 <p className='p-1 rounded-lg cursor-pointer'>Menu</p>
                 <p className='p-1 rounded-lg cursor-pointer'>Services</p>
-                <p className='p-1 rounded-lg cursor-pointer'>Logout</p>
+                <p className='p-1 rounded-lg cursor-pointer' onClick={() => logout()}>Logout</p>
               </menu>
             )}
           </div>
