@@ -16,16 +16,13 @@ function Header() {
   
   const [{user}, dispatch] = useStateValue();
 
-  async function login() {
+  async function loginAndMenu() {
     if(!user) {
       const response = await signInWithPopup(firebaseAuth, provider);
       const { providerData } = response.user;
       dispatch({type: actionType.SET_USER, user: providerData[0]});
       localStorage.setItem(`user`, JSON.stringify(providerData[0]));
     }
-  }
-
-  function toggleMenu() {
     if(user) {
       setIsMenu(!isMenu);
     }
@@ -49,7 +46,7 @@ function Header() {
             <div className='h-4 w-4 absolute top-0 left-4 rounded-full bg-black flex justify-center items-center'>
               <p className='text-xs text-white font-semibold'>2</p>
             </div>
-            <img className='h-9 w-9 rounded-full relative drop-shadow' onClick={() => login()} onMouseEnter={() => toggleMenu()} onMouseLeave={() => toggleMenu()} src={user ? user.photoURL : Avatar} alt={user ? user.displayName : "user-avatar"} />
+            <img className='h-9 w-9 rounded-full relative drop-shadow' onClick={() => loginAndMenu()} src={user ? user.photoURL : Avatar} alt={user ? user.displayName : "user-avatar"} />
             {isMenu && (
               <menu className='flex flex-col bg-yellow-200 w-36 rounded-lg absolute top-10 drop-shadow text-center'>
                 <Link to={"/create-item"}>
