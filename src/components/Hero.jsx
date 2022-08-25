@@ -40,7 +40,7 @@ function Hero() {
             <div className="flex justify-center items-center mr-[-10rem]">
               <img className="w-36" src={HeroIcecream} alt="hero-food1" />
               <div className="flex flex-col w-[340px] mt-10">
-                <p className="font-bold text-xl">Special Icecream</p>
+                <p className="font-bold text-xl">Very Special Icecream</p>
                 <p>₹500</p>
               </div>
             </div>
