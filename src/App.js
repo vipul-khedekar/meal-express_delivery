@@ -10,7 +10,7 @@ function App() {
     <div className="h-screen w-screen flex flex-col">
       <Header />
 
-      <main className="w-full p-8 mt-24">
+      <main>
         <Routes>
           <Route path="/" element={<MainContainer />} />
           <Route path="/create-item" element={<CreateContainer />} />

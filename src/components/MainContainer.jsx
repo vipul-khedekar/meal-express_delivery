@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Hero from "./Hero.jsx";
 
 function MainContainer() {
   return (
-    <div>MainContainer</div>
-  )
+    <div>
+      <Hero />
+    </div>
+  );
 }
 
-export default MainContainer
+export default MainContainer;
