@@ -1,9 +1,7 @@
 import React from "react";
 
 import HeroBackground from "../images/hero-background.png";
-import HeroIcecream from "../images/hero-icecream.png";
-import HeroJuice from "../images/hero-juice.png";
-import HeroFruit from "../images/hero-fruit.png";
+import { heroItems } from "../utils/heroItemsData";
 
 function Hero() {
   return (
@@ -36,30 +34,22 @@ function Hero() {
             alt="hero-background"
           />
 
-          <div className="flex flex-col gap-1 absolute top-24 right-96">
-            <div className="flex justify-center items-center mr-[-10rem]">
-              <img className="w-36" src={HeroIcecream} alt="hero-food1" />
-              <div className="flex flex-col w-[340px] mt-10">
-                <p className="font-bold text-xl">Very Special Icecream</p>
-                <p>₹500</p>
-              </div>
-            </div>
-
-            <div className="flex justify-center items-center mr-[-32rem]">
-              <img className="w-28" src={HeroJuice} alt="hero-food1" />
-              <div className="flex flex-col w-[340px] mt-10">
-                <p className="font-bold text-xl">Water filled Pepsi can</p>
-                <p>₹20</p>
-              </div>
-            </div>
-
-            <div className="flex justify-center items-center mt-10 mr-[-14rem]">
-              <img className="h-40 w-40" src={HeroFruit} alt="hero-food1" />
-              <div className="flex flex-col w-[340px] mt-10">
-                <p className="font-bold text-xl">A slice of Pineapple</p>
-                <p>₹999</p>
-              </div>
-            </div>
+          <div className="flex flex-col gap-5 absolute top-24 right-96">
+            {heroItems &&
+              heroItems.map((item) => {
+                return (
+                  <div
+                    key={item.id}
+                    className="flex justify-center items-center mr-[-10rem]"
+                  >
+                    <img className="w-32" src={item.picture} alt={item.name} />
+                    <div className="flex flex-col w-[340px] mt-10">
+                      <p className="font-bold text-xl">{item.name}</p>
+                      <p>₹{item.price}</p>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
