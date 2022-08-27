@@ -127,7 +127,7 @@ function AdminControls() {
   function clearData() {
     setItemName(``);
     setItemPrice(``);
-    setItemCategory(`Select a category`);
+    setItemCategory(null);
     setItemImage(null);
   }
 
@@ -162,7 +162,7 @@ function AdminControls() {
 
         <div className="h-14 w-96 flex justify-center items-center gap-3 p-2 border rounded-md border-solid border-red-500">
           <MdCategory />
-          <select onCanPlay={(e) => setItemCategory(e.target.value)}>
+          <select onChange={(e) => setItemCategory(e.target.value)}>
             <option className="bg-white" value="other">
               Select a category
             </option>
