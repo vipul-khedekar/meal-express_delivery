@@ -45,7 +45,7 @@ function AdminControls() {
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
-        }, 4000);
+        }, 1000);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -55,7 +55,7 @@ function AdminControls() {
           setMessage(`Image uploaded successfully.`);
           setTimeout(() => {
             setIsFieldEmpty(false);
-          }, 4000);
+          }, 1000);
         });
       }
     );
@@ -74,7 +74,7 @@ function AdminControls() {
         setMessage(`Image deleted successfully`);
         setTimeout(() => {
           setIsFieldEmpty(false);
-        }, 4000);
+        }, 1000);
       })
       .catch((error) => {
         console.log(error);
@@ -83,7 +83,7 @@ function AdminControls() {
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
-        }, 4000);
+        }, 1000);
       });
   }
 
@@ -97,7 +97,7 @@ function AdminControls() {
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
-        }, 4000);
+        }, 1000);
       } else {
         const data = {
           id: `${Date.now()}`,
@@ -115,7 +115,7 @@ function AdminControls() {
         setMessage(`Data uploaded successfully.`);
         setTimeout(() => {
           setIsFieldEmpty(false);
-        }, 4000);
+        }, 1000);
 
         clearData();
       }
@@ -127,7 +127,7 @@ function AdminControls() {
   function clearData() {
     setItemName(``);
     setItemPrice(``);
-    setItemCategory(null);
+    setItemCategory(itemCategory);
     setItemImage(null);
   }
 
