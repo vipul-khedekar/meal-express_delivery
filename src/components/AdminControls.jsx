@@ -16,7 +16,9 @@ import {
 import Loader from "./LoadingCircle";
 import { storage } from "../firebase.config";
 import { categories } from "../utils/categoryData";
-import { saveItem } from "../utils/firebaseFunctions";
+import { saveItem, fetchFoodItems } from "../utils/firebaseFunctions";
+import { useStateValue } from "../context/StateProvider";
+import { actionType } from "../context/reducer";
 
 function AdminControls() {
   const [itemName, setItemName] = useState(``);
@@ -26,6 +28,8 @@ function AdminControls() {
   const [message, setMessage] = useState(null);
   const [isFieldEmpty, setIsFieldEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [{ foodItems }, dispatch] = useStateValue();
 
   function uploadImage(e) {
     setIsLoading(true);
@@ -122,6 +126,8 @@ function AdminControls() {
     } catch (error) {
       console.log(error);
     }
+
+    fetchData();
   }
 
   function clearData() {
@@ -129,6 +135,15 @@ function AdminControls() {
     setItemPrice(``);
     setItemCategory(itemCategory);
     setItemImage(null);
+  }
+
+  async function fetchData() {
+    const response = await fetchFoodItems();
+    dispatch({
+      type: actionType.SET_USER,
+      user: JSON.parse(localStorage.getItem(`user`)),
+    });
+    dispatch({ type: actionType.SET_FOOD_ITEMS, foodItems: response });
   }
 
   return (
