@@ -36,8 +36,7 @@ function AdminControls() {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const uploadProgress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log(snapshot);
       },
       (error) => {
         console.log(error);
