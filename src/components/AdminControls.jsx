@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import {
   MdLibraryAdd,
   MdCategory,
   MdImage,
   MdOutlinePriceChange,
   MdDeleteForever,
 } from "react-icons/md";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
 
 import Loader from "./LoadingCircle";
+import { storage } from "../firebase.config";
 import { categories } from "../utils/categoryData";
-import { storage } from "../firebase.config.js";
-import { addItem } from "../utils/firebaseFunctions";
+import { saveItem } from "../utils/firebaseFunctions";
 
 function AdminControls() {
   const [itemName, setItemName] = useState(``);
   const [itemPrice, setItemPrice] = useState(``);
-  const [itemCategory, setItemCategory] = useState(``);
+  const [itemCategory, setItemCategory] = useState(null);
   const [itemImage, setItemImage] = useState(null);
+  const [message, setMessage] = useState(null);
   const [isFieldEmpty, setIsFieldEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +32,7 @@ function AdminControls() {
     const imageFile = e.target.files[0];
     const storageRef = ref(storage, `Images/${Date.now()}-${imageFile.name}`);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -40,6 +42,7 @@ function AdminControls() {
       (error) => {
         console.log(error);
         setIsFieldEmpty(true);
+        setMessage(`Error while uploading. Try again.`);
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
@@ -50,6 +53,7 @@ function AdminControls() {
           setItemImage(downloadURL);
           setIsLoading(false);
           setIsFieldEmpty(true);
+          setMessage(`Image uploaded successfully.`);
           setTimeout(() => {
             setIsFieldEmpty(false);
           }, 4000);
@@ -60,12 +64,15 @@ function AdminControls() {
 
   function removeUploadedImage() {
     setIsLoading(true);
-    const removeRef = ref(storage, itemImage);
-    deleteObject(removeRef)
+
+    const deleteRef = ref(storage, itemImage);
+
+    deleteObject(deleteRef)
       .then(() => {
         setItemImage(null);
         setIsLoading(false);
         setIsFieldEmpty(true);
+        setMessage(`Image deleted successfully`);
         setTimeout(() => {
           setIsFieldEmpty(false);
         }, 4000);
@@ -73,6 +80,7 @@ function AdminControls() {
       .catch((error) => {
         console.log(error);
         setIsFieldEmpty(true);
+        setMessage(`Error while deleting. Try again.`);
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
@@ -82,28 +90,34 @@ function AdminControls() {
 
   function saveItemDetails() {
     setIsLoading(true);
+
     try {
-      if (!itemName || !itemPrice || !itemCategory || !itemImage) {
+      if ((!itemName && !itemPrice && !itemCategory, !itemImage)) {
         setIsFieldEmpty(true);
+        setMessage(`Fields can't be empty.`);
         setTimeout(() => {
           setIsFieldEmpty(false);
           setIsLoading(false);
         }, 4000);
       } else {
-        const item = {
+        const data = {
           id: `${Date.now()}`,
-          name: itemName,
+          title: itemName,
           price: itemPrice,
           category: itemCategory,
           imageURL: itemImage,
-          quantity: 1,
+          qty: 1,
         };
-        addItem(item);
+
+        saveItem(data);
+
         setIsLoading(false);
         setIsFieldEmpty(true);
+        setMessage(`Data uploaded successfully.`);
         setTimeout(() => {
           setIsFieldEmpty(false);
         }, 4000);
+
         clearData();
       }
     } catch (error) {
@@ -114,18 +128,14 @@ function AdminControls() {
   function clearData() {
     setItemName(``);
     setItemPrice(``);
-    setItemCategory(``);
+    setItemCategory(`Select a category`);
     setItemImage(null);
   }
 
   return (
     <div className="w-full px-8 mt-24">
       <div className="flex flex-col justify-center items-center gap-4">
-        {isFieldEmpty ? (
-          <p className="h-16">Please fill all the fields.</p>
-        ) : (
-          <p className="h-16">Add item details</p>
-        )}
+        {isFieldEmpty && <p className="text-center">{message}</p>}
 
         <div className="h-14 w-96 flex justify-center items-center gap-3 p-2 border rounded-md border-solid border-red-500">
           <MdLibraryAdd />
@@ -154,15 +164,16 @@ function AdminControls() {
         <div className="h-14 w-96 flex justify-center items-center gap-3 p-2 border rounded-md border-solid border-red-500">
           <MdCategory />
           <select onCanPlay={(e) => setItemCategory(e.target.value)}>
-            <option value="other">Select a category</option>
-            {categories &&
-              categories.map((category) => {
-                return (
-                  <option key={category.id} value={category.urlParamName}>
-                    {category.name}
-                  </option>
-                );
-              })}
+            <option className="bg-white" value="other">
+              Select a category
+            </option>
+            {categories.map((category) => {
+              return (
+                <option key={category.id} value={category.urlParamName}>
+                  {category.name}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -171,25 +182,38 @@ function AdminControls() {
             <Loader />
           ) : (
             <>
-              <MdImage />
-              <p>Image upload</p>
               {!itemImage ? (
-                <input
-                  onChange={(e) => uploadImage(e)}
-                  type="file"
-                  accept="image/*"
-                />
-              ) : (
-                <>
-                  <img
-                    className="w-full h-full object-cover"
-                    src={itemImage}
-                    alt="uploaded-image"
+                <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+                  <div className="w-full h-full flex flex-col items-center justify-center">
+                    <MdImage className="text-gray-500 group-hover:text-gray-700 text-3xl" />
+                    <p className="text-gray-500 group-hover:text-gray-700">
+                      Upload an image
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    name="upload-image"
+                    accept="image/*"
+                    onChange={(e) => uploadImage(e)}
+                    className="w-0 h-0"
                   />
-                  <button onClick={() => removeUploadedImage()} type="button">
-                    <MdDeleteForever className="text-xl" />
+                </label>
+              ) : (
+                <div className="relative h-full">
+                  <img
+                    src={itemImage}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    className="absolute bottom-3 right-3 p-3 rounded-full bg-red-500 text-xl
+                  cursor-pointer outline-none hover:shadow-md duration-500 transition-all ease-in-out"
+                    onClick={() => removeUploadedImage()}
+                  >
+                    <MdDeleteForever className="text-white" />
                   </button>
-                </>
+                </div>
               )}
             </>
           )}
