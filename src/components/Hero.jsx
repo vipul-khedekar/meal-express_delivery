@@ -33,14 +33,14 @@ function Hero() {
           </div>
         </div>
 
-        <div className="flex-1 flex justify-center mt-14 ml-24">
+        <div className="flex-1 flex justify-center mt-14 ml-24 relative">
           <img
             className="h-[80vh]"
             src={HeroBackground}
             alt="hero-background"
           />
 
-          <div className="flex flex-col gap-5 absolute top-24 right-96">
+          <div className="flex flex-col gap-5 absolute top-4 right-72">
             {heroItems &&
               heroItems.map((item) => {
                 return (
